@@ -1,0 +1,18 @@
+{
+  "name": "tampermonkey-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "build:bi": "rollup -c src/bilibili-judgement.rollup.js",
+    "build:jd": "rollup -c src/jd-assistant.rollup.js"
+  },
+  "author": "yuuuu",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^3.0.0",
+    "rollup": "^1.31.0",
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
+  }
+}
