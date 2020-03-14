@@ -24,6 +24,7 @@ window.onload = async function main() {
     const approve =
       (await getVoteCount(caseID, 1))[0] >= (await getVoteCount(caseID, 2))[0]
     await vote(caseID, approve)
+    await delay((Math.floor(Math.random() * 4) + 1) * 1000)
   }
 }
 

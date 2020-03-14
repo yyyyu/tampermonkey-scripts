@@ -9,7 +9,7 @@ export default {
 // ==UserScript==
 // @name         Bilibili 风纪委员投票
 // @namespace    Bilibili
-// @version      0.2
+// @version      0.3
 // @author       yuuuu
 // @description  选择多数意见进行投票
 // @icon         https://www.bilibili.com/favicon.ico
