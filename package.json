@@ -1,14 +1,24 @@
 {
   "name": "tampermonkey-scripts",
   "version": "1.0.0",
-  "description": "",
-  "main": "",
+  "description": "personal tampermonkey scripts.",
+  "homepage": "https://github.com/yyyyu/tampermonkey-scripts",
+  "bugs": {
+    "url": "https://github.com/yyyyu/tampermonkey-scripts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "yyyyu",
+    "email": "g592842897@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yyyyu/tampermonkey-scripts.git"
+  },
   "scripts": {
     "build:bi": "rollup -c src/bilibili-judgement.rollup.js",
     "build:jd": "rollup -c src/jd-assistant.rollup.js"
   },
-  "author": "yuuuu",
-  "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-typescript": "^3.0.0",
     "@types/tampermonkey": "^4.0.0",
