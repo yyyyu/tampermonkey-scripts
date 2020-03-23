@@ -1,4 +1,7 @@
 window.onload = async function main() {
+  if (location.pathname !== '/') {
+    renderSetting()
+  }
   if (GM_getValue('finish_day') === getDay()) {
     return
   }
@@ -23,8 +26,18 @@ window.onload = async function main() {
     }
     const approve =
       (await getVoteCount(caseID, 1))[0] >= (await getVoteCount(caseID, 2))[0]
-    await vote(caseID, approve)
-    await delay((Math.floor(Math.random() * 4) + 1) * 1000)
+    await vote(
+      caseID,
+      approve,
+      approve
+        ? GM_getValue('approve_text', '')
+        : GM_getValue('disapprove_text', ''),
+    )
+    let intervel = parseInt(GM_getValue('vote_min_interval', '2000'), 10)
+    intervel =
+      (Number.isInteger(intervel) && intervel > 0 ? intervel : 0) +
+      Math.round(Math.random() * 2) * 1000
+    await delay(intervel)
   }
 }
 
@@ -89,6 +102,7 @@ async function getVoteCount(
 async function vote(
   caseID: CaseID,
   approve: boolean,
+  content: string,
 ): Promise<[boolean, Code]> {
   const vot = approve ? 4 : 2
   const csrf = getCookie('bili_jct')
@@ -99,7 +113,9 @@ async function vote(
     },
     mode: 'cors',
     credentials: 'include',
-    body: `cid=${caseID}&vote=${vot}&content=&attr=0&csrf=${csrf}`,
+    body: `cid=${caseID}&vote=${vot}&content=${encodeURIComponent(
+      content,
+    )}&attr=0&csrf=${csrf}`,
   })
   const result = await response.json()
   return [result.code === 0, result.code]
@@ -139,4 +155,197 @@ async function delay(timer: number) {
 function getDay() {
   const date = new Date()
   return `${date.getFullYear()}${date.getMonth()}${date.getDate()}`
+}
+
+/**
+ * 渲染设置UI
+ */
+function renderSetting() {
+  const button = document.createElement('button')
+  button.className = 'votescript-cfgbtn'
+  button.innerText = '投票配置'
+  let modal: HTMLDivElement
+  button.addEventListener('click', () => {
+    if (!modal) {
+      modal = document.createElement('div')
+      modal.className = 'votescript-modal'
+      const form = createForm(() => {
+        modal.className = 'votescript-modal hide'
+      })
+      modal.appendChild(form)
+      document.body.append(modal)
+    } else {
+      modal.className = 'votescript-modal'
+    }
+  })
+  document.body.append(button)
+  document.head.append(createStyle())
+}
+
+/**
+ * 创建表单
+ */
+function createForm(hide: () => void) {
+  const form = document.createElement('div')
+  form.className = 'votescript-form'
+  const approveRow = createInputRow(
+    '赞成描述:',
+    '赞成描述',
+    GM_getValue('approve_text', ''),
+  )
+  const disapproveRow = createInputRow(
+    '反对描述:',
+    '反对描述',
+    GM_getValue('disapprove_text', ''),
+  )
+  const intervelRow = createInputRow(
+    '最小投票间隔(ms)(实际会额外增加0~2s):',
+    '最小投票间隔(ms)',
+    GM_getValue('vote_min_interval', '2000'),
+  )
+  const buttonGroup = document.createElement('div')
+  buttonGroup.className = 'votescript-buttongroup'
+  const saveBtn = createButton('保存')
+  saveBtn.addEventListener('click', () => {
+    const approveInput = approveRow.lastElementChild as HTMLInputElement
+    const approveText = approveInput.value.trim()
+    GM_setValue('approve_text', approveText)
+    approveInput.value = approveText
+
+    const disapproveInput = disapproveRow.lastElementChild as HTMLInputElement
+    const disapproveText = disapproveInput.value.trim()
+    GM_setValue('disapprove_text', disapproveText)
+    disapproveInput.value = disapproveText
+
+    const intervelInput = intervelRow.lastElementChild as HTMLInputElement
+    let intervel = parseInt(intervelInput.value, 10)
+    intervel = Number.isInteger(intervel) && intervel >= 0 ? intervel : 2000
+    GM_setValue('vote_min_interval', `${intervel}`)
+    intervelInput.value = `${intervel}`
+
+    hide()
+  })
+  const cancelBtn = createButton('取消')
+  cancelBtn.addEventListener('click', () => hide())
+  buttonGroup.append(saveBtn, cancelBtn)
+  form.append(approveRow, disapproveRow, intervelRow, buttonGroup)
+  return form
+}
+
+/**
+ * 创建输入框
+ */
+function createInputRow(
+  labelText: string,
+  inputPlaceholder: string,
+  inputValue: string,
+) {
+  const row = document.createElement('div')
+  row.className = 'votescript-row'
+  const label = document.createElement('label')
+  label.innerText = labelText
+  label.className = 'votescript-label'
+  const input = document.createElement('input')
+  input.value = inputValue
+  input.placeholder = inputPlaceholder
+  input.className = 'votescript-input'
+  row.append(label, input)
+  return row
+}
+
+/**
+ * 创建按钮
+ */
+function createButton(text: string) {
+  const button = document.createElement('button')
+  button.className = 'votescript-btn'
+  button.innerText = text
+  return button
+}
+
+/**
+ * 创建样式
+ */
+function createStyle() {
+  const style = document.createElement('style')
+  style.type = 'text/css'
+  style.appendChild(
+    document.createTextNode(`
+.votescript-cfgbtn {
+-webkit-appearance: none;
+position: fixed;
+bottom: 20px;
+right: 0px;
+width: 100px;
+height: 32px;
+line-height: 32px;
+background-color: #00a1d6;
+border: none;
+border-radius: 4px;
+color: #fff;
+font-size: 16px;
+font-weight: 700;
+cursor: pointer;
+}
+
+.votescript-modal {
+position: fixed;
+z-index: 1000;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background-color: rgba(0, 0, 0, 0.3);
+}
+
+.votescript-modal.hide {
+display: none;
+}
+
+.votescript-form {
+box-sizing: border-box;
+width: 500px;
+margin: 100px auto 0;
+padding: 15px;
+background-color: #fff;
+border-radius: 5px;
+}
+
+.votescript-row {
+margin: 10px 0;
+}
+
+.votescript-buttongroup {
+margin-top: 20px;
+}
+
+.votescript-btn {
+-webkit-appearance: none;
+margin-right: 10px;
+padding: 4px 12px;
+border: none;
+border-radius: 3px;
+background-color: #00a1d6;
+color: #fff;
+cursor: pointer;
+}
+
+.votescript-label {
+display: inline-block;
+margin-bottom: 5px;
+}
+
+.votescript-input {
+-webkit-appearance: none;
+display: block;
+box-sizing: border-box;
+width: 100%;
+height: 30px;
+border: 1px solid #c1c1c1;
+border-radius: 3px;
+padding: 2px 5px;
+}
+`),
+  )
+  return style
 }

@@ -9,7 +9,8 @@ export default {
 // ==UserScript==
 // @name         Bilibili 风纪委员投票
 // @namespace    Bilibili
-// @version      0.3
+// @version      0.4
+// @change-log   添加配置提交内容及投票间隔UI
 // @author       yyyyu
 // @description  选择多数意见进行投票
 // @license      MIT
