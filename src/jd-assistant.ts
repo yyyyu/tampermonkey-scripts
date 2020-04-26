@@ -8,9 +8,12 @@ function main() {
     button.innerText = '一键价保'
     button.onclick = async () => {
       while (true) {
+        // 排除超过价保周期及正在进行价保
         const buttons = Array.from(
           document.querySelectorAll<HTMLButtonElement>('[id^=applyBT]'),
-        ).filter(btn => btn.innerText === '申请价保')
+        ).filter(
+          (btn) => btn.innerText === '申请价保' && !btn.hasAttribute('style'),
+        )
         if (buttons.length === 0) {
           break
         }
@@ -19,8 +22,8 @@ function main() {
           if (buttons5.length === 0) {
             break
           }
-          buttons5.forEach(btn => btn.click())
-          await new Promise(resolve => setTimeout(resolve, 1000))
+          buttons5.forEach((btn) => btn.click())
+          await new Promise((resolve) => setTimeout(resolve, 1000))
         }
       }
     }
@@ -33,6 +36,7 @@ function main() {
       )) {
         linkText += `https://item.jd.com/${el.getAttribute('skuid')}.html\n\n`
       }
+      linkText += '复制'
       await navigator.clipboard.writeText(linkText)
       alert('复制成功')
     }

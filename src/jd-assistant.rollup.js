@@ -9,7 +9,7 @@ export default {
 // ==UserScript==
 // @name         京东助理
 // @namespace    JD
-// @version      0.2
+// @version      0.3
 // @author       yyyyu
 // @description  一键保价、复制购物车选中链接
 // @license      MIT
