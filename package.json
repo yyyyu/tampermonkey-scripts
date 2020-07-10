@@ -16,14 +16,14 @@
     "url": "https://github.com/yyyyu/tampermonkey-scripts.git"
   },
   "scripts": {
-    "build:bi": "rollup -c src/bilibili-judgement.rollup.js",
+    "build:bi": "rollup -c src/bilibili/judgement/build.rollup.js",
     "build:jd": "rollup -c src/jd-assistant.rollup.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^3.0.0",
     "@types/tampermonkey": "^4.0.0",
     "rollup": "^1.31.0",
-    "tslint": "^6.0.0",
+    "tslib": "^2.0.0",
     "typescript": "^3.7.5"
   }
 }
