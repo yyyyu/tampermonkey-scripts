@@ -22,16 +22,38 @@ async function main() {
   }
 
   if (location.pathname === '/') {
-    openInTab('//www.bilibili.com/judgement', { insert: true })
+    const [cid, code] = await getCaseID()
+    if (code !== JudgementCode.Finished) {
+      openInTab(`//www.bilibili.com/judgement?cid=${cid}`, { insert: true })
+    }
     return
   }
+
+  // 从查询参数上拿到首页获取案件拿到的id
+  let queryCid: number = -1
+  try {
+    const result = parseInt(location.search.replace('?', '').split('=')[1], 10)
+    if (result > 0) {
+      queryCid = result
+    }
+  } catch {}
 
   while (true) {
     setSlogan(
       `(${config.todayCompletedCount}/${Config.MAX_DAILY_CASE_COUNT})获取案件...`,
     )
 
-    const [cid, code] = await getCaseID()
+    let cid: number = -1
+    let code: number = -1
+
+    if (queryCid > 0) {
+      cid = queryCid
+      queryCid = -1
+    } else {
+      const result = await getCaseID()
+      cid = result[0]
+      code = result[1]
+    }
 
     if (JudgementCode.NoCase === code) {
       setSlogan(
