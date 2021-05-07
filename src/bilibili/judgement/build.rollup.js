@@ -9,7 +9,7 @@ export default {
 // ==UserScript==
 // @name         Bilibili 风纪委员投票
 // @namespace    Bilibili
-// @version      0.7
+// @version      0.8
 // @change-log   0.7 fix任务完成后首页依旧打开投票问题
 // @change-log   0.6 添加匿名投票功能（原本就是匿名投票）、当日投票完成后自动关闭开关
 // @change-log   0.5 添加投票补偿、描述性文字

@@ -57,9 +57,9 @@ async function main() {
 
     if (JudgementCode.NoCase === code) {
       setSlogan(
-        `(${config.todayCompletedCount}/${Config.MAX_DAILY_CASE_COUNT})当前无案件，5s后自动重试`,
+        `(${config.todayCompletedCount}/${Config.MAX_DAILY_CASE_COUNT})当前无案件，10min后自动重试`,
       )
-      await delay(5000)
+      await delay(10 * 60 * 1000)
       continue
     }
 

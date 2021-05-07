@@ -36,6 +36,13 @@ function main() {
       )) {
         linkText += `https://item.jd.com/${el.getAttribute('skuid')}.html\n\n`
       }
+      for (const el of Array.from(
+        document.getElementsByClassName('item-seleted'),
+      )) {
+        if (el instanceof HTMLElement) {
+          linkText += `https://item.jd.com/${el.dataset.sku}.html\n\n`
+        }
+      }
       linkText += '复制'
       await navigator.clipboard.writeText(linkText)
       alert('复制成功')
