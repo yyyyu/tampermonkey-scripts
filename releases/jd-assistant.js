@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         京东助理
 // @namespace    JD
-// @version      0.5
-// @author       yyyyu
+// @version      0.6
+// @author       yvvw
 // @description  一键保价、复制购物车选中链接
 // @license      MIT
-// @homepage     https://github.com/yyyyu/tampermonkey-scripts
+// @homepage     https://github.com/yvvw/tampermonkey-scripts
+// @downloadURL  https://raw.githubusercontent.com/yvvw/tampermonkey-scripts/master/releases/jd-assistant.js
 // @icon         https://www.jd.com/favicon.ico
 // @match        https://pcsitepp-fm.jd.com/
 // @match        https://cart.jd.com/*

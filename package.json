@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build:bi": "rollup -c src/bilibili/judgement/build.rollup.js",
-    "build:jd": "rollup -c src/jd-assistant.rollup.js"
+    "build:jd": "rollup -c src/jd/build.rollup.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^3.0.0",
